@@ -7,7 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import avatarVideo from "/videos/avatar-interaction.mp4";
+
 
 /* ---- timeline of the video (seconds) ---- */
 const IDLE_END = 1.0; // 0 → IDLE_END = typing loop, after that = look up, wave, hand down
@@ -17,6 +17,7 @@ const BUBBLE_AT = IDLE_END + 0.6; // when the "Hello" bubble pops in (tune to wh
 const TRIGGER_MARGIN = 180; // px around the avatar where the cursor counts as "close"
 const LEAVE_DELAY = 600; // ms the cursor must stay away before she goes back to work
 const TAP_HOLD = 4000; // ms the greeting lasts after a tap (touch devices)
+const avatarVideo = "https://res.cloudinary.com/lcmrgcef/video/upload/v1795376165/avatar-interaction.mp4"
 
 export default function Avatar() {
   const reduce = useReducedMotion();
