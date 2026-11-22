@@ -1,139 +1,145 @@
-import { motion } from 'framer-motion'
-import { Calendar, MapPin } from 'lucide-react'
+import { MotionConfig, motion } from "framer-motion";
+import { Calendar, MapPin } from "lucide-react";
+
+const B = ({ children }) => <strong className="font-semibold text-[#F4F1F6]">{children}</strong>;
 
 const experiences = [
   {
-    role: 'Développeuse Full-Stack',
-    company: "EVAST'IN",
-    period: '01/2025 – 06/2025',
-    location: 'Ennasr 2',
+    type: "Final-year internship",
+    period: "3 Mar 2025 – 17 Jun 2025",
+    role: "Full-Stack Developer",
+    company: "Evast’In",
+    location: "Tunis, Tunisia",
+    summary: (
+      <>
+        Designed and developed <B>PawFriend</B>, a web platform dedicated to pet adoption and appointment booking with
+        veterinarians and trainers.
+      </>
+    ),
     highlights: [
-      <>Développement de <strong className="text-white">PawFrindu</strong> — plateforme MERN complète (60+ user stories)</>,
-      <>Authentification <strong className="text-white">JWT</strong> multi-rôles + validation admin</>,
-      <>Modules Adoption, Vétérinaires, Dressage & <strong className="text-white">Lost & Found</strong> avec matching multicritère</>,
-      <><strong className="text-white">Agile/Scrum</strong> — 6 sprints en binôme avec association partenaire</>,
+      <>
+        Developed a full-stack application using <B>React, Node.js, Express, and MongoDB</B>, a complete MERN platform
+        covering <B>60+ user stories</B>.
+      </>,
+      <>
+        Implemented multi-role <B>JWT</B> authentication with admin validation, and role-based access control (
+        <B>RBAC</B>) for administrators, veterinarians, trainers, and pet owners.
+      </>,
+      <>
+        Built the Adoption, Veterinarians, Training and <B>Lost &amp; Found</B> modules, including multi-criteria
+        matching.
+      </>,
+      <>
+        Collaborated in a two-person team using <B>Agile/Scrum</B>, organized into six sprints with incremental
+        releases, in direct collaboration with a partner association.
+      </>,
     ],
   },
   {
-    role: 'Stage de Perfectionnement',
-    company: 'Tuniversal Technologie',
-    period: '01/2024 – 02/2024',
-    location: 'Hammam-Lif',
+    period: "Jan 2024 – Feb 2024",
+    role: "Advanced Internship",
+    company: "Tuniversal Technologie",
+    location: "Hammam-Lif, Tunisia",
     highlights: [
-      <>Application de gestion de restaurant en <strong className="text-white">PHP</strong></>,
-      <>Authentification <strong className="text-white">2FA</strong> avec Google Authenticator</>,
+      <>
+        Restaurant management application built in <B>PHP</B>.
+      </>,
+      <>
+        <B>2FA</B> authentication with Google Authenticator.
+      </>,
     ],
   },
   {
-    role: "Stage d'Initiation",
-    company: 'LIF AFRICA',
-    period: '01/2023 – 02/2023',
-    location: 'Hammam-Lif',
+    period: "Jan 2023 – Feb 2023",
+    role: "Introductory Internship",
+    company: "LIF AFRICA",
+    location: "Hammam-Lif, Tunisia",
     highlights: [
-      <>Deux apps <strong className="text-white">JavaScript / PHP</strong> développées en autonomie</>,
-      <>Découverte des pratiques de travail en équipe</>,
+      <>
+        Two <B>JavaScript / PHP</B> apps developed independently.
+      </>,
+      <>Discovered team working practices.</>,
     ],
   },
-]
-
-const container = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.08 },
-  },
-}
-
-const item = {
-  hidden: { opacity: 0, x: -12 },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.4, ease: 'easeOut' },
-  },
-}
+];
 
 export default function Experience() {
   return (
-    <section id="experience" className="relative py-24">
-      <div className="section-container">
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <h2 className="mb-3 text-3xl font-bold font-display sm:text-4xl">
-            Expériences
-          </h2>
-          <div className="w-16 h-px mx-auto bg-amber-400/60" />
-        </motion.div>
+    <MotionConfig reducedMotion="user">
+      <section id="experience" aria-labelledby="experience-title" className="relative py-24 lg:py-32">
+        <div className="section-container">
+          <motion.h2
+            id="experience-title"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-14 text-3xl font-bold tracking-tight text-center font-display sm:text-4xl text-[#F4F1F6]"
+          >
+            Experience
+          </motion.h2>
 
-        {/* Timeline */}
-        <div className="relative max-w-2xl mx-auto">
-          <div className="absolute left-[7px] top-3 bottom-3 w-px bg-slate-800" />
+          <ol className="relative max-w-3xl mx-auto">
+            {/* timeline line */}
+            <div aria-hidden className="absolute left-[7px] top-2 bottom-2 w-px bg-[#7A1330]/40" />
 
-          <div className="space-y-12">
             {experiences.map((exp, i) => (
-              <motion.div
+              <motion.li
                 key={exp.company}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative pl-10"
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="relative pl-10 pb-14 last:pb-0"
               >
-                {/* Dot */}
-                <div className="absolute left-0 top-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-slate-950 bg-amber-400" />
+                {/* dot: the most recent one glows */}
+                <span
+                  aria-hidden
+                  className={`absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-[3px] border-[#0A0910] ${
+                    i === 0
+                      ? "bg-[#FF4FA0] shadow-[0_0_0_4px_rgba(255,79,160,0.18)]"
+                      : "bg-[#A8203F]"
+                  }`}
+                />
 
-                {/* Header */}
-                <div className="mb-3">
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                    <h3 className="text-lg font-semibold text-white">
-                      {exp.company}
-                    </h3>
-                    <span className="text-sm text-amber-400/90">
-                      {exp.role}
+                {/* date + type */}
+                <div className="flex flex-wrap items-center mb-3 gap-x-4 gap-y-2">
+                  <span className="flex items-center gap-1.5 font-mono text-xs text-[#948C9C]">
+                    <Calendar size={13} aria-hidden />
+                    {exp.period}
+                  </span>
+                  {exp.type && (
+                    <span className="rounded-full border border-[#7A1330]/50 bg-black/30 px-2.5 py-0.5 font-mono text-[11px] text-[#F0AFC6]">
+                      {exp.type}
                     </span>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar size={11} />
-                      {exp.period}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin size={11} />
-                      {exp.location}
-                    </span>
-                  </div>
+                  )}
                 </div>
 
-                {/* Highlights with stagger */}
-                <motion.ul
-                  variants={container}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true }}
-                  className="space-y-2"
-                >
-                  {exp.highlights.map((h, j) => (
-                    <motion.li
-                      key={j}
-                      variants={item}
-                      className="flex gap-2.5 text-sm leading-relaxed text-slate-400"
-                    >
-                      <span className="mt-[9px] w-1 h-1 rounded-full bg-amber-400/50 shrink-0" />
-                      <span>{h}</span>
-                    </motion.li>
+                {/* role + company */}
+                <h3 className="text-xl font-semibold text-[#F4F1F6]">{exp.role}</h3>
+                <p className="flex flex-wrap items-center mt-1 mb-4 text-sm gap-x-4 gap-y-1 text-[#B7AFC0]">
+                  <span className="font-medium text-[#FF8FC0]">{exp.company}</span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin size={13} aria-hidden className="text-[#FF4FA0]/70" />
+                    {exp.location}
+                  </span>
+                </p>
+
+                {/* content */}
+                {exp.summary && <p className="mb-4 leading-relaxed text-[#E4DEE8]">{exp.summary}</p>}
+                <ul className="space-y-2">
+                  {exp.highlights.map((h, i2) => (
+                    <li key={i2} className="flex gap-3 text-[15px] leading-relaxed text-[#B7AFC0]">
+                      <span aria-hidden className="mt-[10px] h-1 w-1 shrink-0 rounded-full bg-[#FF4FA0]/70" />
+                      {h}
+                    </li>
                   ))}
-                </motion.ul>
-              </motion.div>
+                </ul>
+              </motion.li>
             ))}
-          </div>
+          </ol>
         </div>
-      </div>
-    </section>
-  )
+      </section>
+    </MotionConfig>
+  );
 }

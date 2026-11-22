@@ -6,13 +6,11 @@
   html {
     scroll-behavior: smooth;
   }
-
   body {
-    @apply font-sans antialiased bg-slate-950 text-slate-100;
+    @apply font-sans antialiased bg-ink text-[#F4F1F6];
   }
-
   ::selection {
-    @apply text-white bg-accent-500/40;
+    @apply text-white bg-pink/30;
   }
 }
 
@@ -20,43 +18,38 @@
   .section-container {
     @apply max-w-6xl px-4 mx-auto sm:px-6 lg:px-8;
   }
-
   .gradient-text {
-    @apply text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text;
+    @apply text-transparent bg-gradient-to-r from-bordeaux via-bordeaux-light to-pink bg-clip-text;
   }
-
   .card-glass {
-    @apply border bg-slate-900/60 backdrop-blur-xl border-slate-700/50 rounded-2xl;
+    @apply border bg-black/40 backdrop-blur-xl border-bordeaux/30 rounded-2xl;
   }
-
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all duration-300 rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300;
+    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
+           bg-bordeaux text-[#F4F1F6] transition-all duration-300
+           hover:bg-pink hover:shadow-[0_0_24px_-4px_rgba(255,79,160,0.55)];
   }
-
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all duration-300 border rounded-full border-slate-600 text-slate-300 hover:border-amber-400/50 hover:text-amber-300;
+    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
+           border border-bordeaux-light text-[#F0AFC6] transition-all duration-300
+           hover:border-pink hover:bg-bordeaux/30;
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #0A0910;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #7A1330;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #A8203F;
 }
 
-/* Video player styles */
 video {
   border-radius: 0.75rem;
 }
