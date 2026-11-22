@@ -1,16 +1,23 @@
 import {
+  MotionConfig,
   motion,
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
   useSpring,
 } from "framer-motion";
-import { ArrowDown, Github, Laptop, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
+import { ArrowDown, Download, Github, Globe, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import Avatar from "../components/Avatar";
 import Scene3D from "../components/Scene3D";
 
 const ROLES = ["full-stack (MERN)", "devops / sre", "cloud & distributed systems"];
+
+// Put your CV in /public (for example /cv-cherifa-ben-ghorbel.pdf) and set the path here.
+// While it is null, the "Download CV" button is hidden.
+const CV_URL = null;
+
+const ease = [0.22, 1, 0.36, 1];
 
 /* One orchestrated entrance: the text column staggers in, the avatar follows (see Avatar). */
 const column = {
@@ -19,8 +26,21 @@ const column = {
 };
 const item = {
   hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
 };
+
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0]";
+
+const socialClass =
+  "p-2.5 border rounded-full bg-black/60 border-[#7A1330]/40 text-[#C9C0D1] transition-colors " +
+  "hover:text-[#FF4FA0] hover:border-[#FF4FA0]/60 " + focusRing;
+
+const SOCIALS = [
+  { icon: Mail, label: "Send me an email", href: "mailto:cherifabenghorbel@gmail.com", external: false },
+  { icon: Github, label: "GitHub profile", href: "https://github.com/cherifabenghorbel", external: true },
+  { icon: Linkedin, label: "LinkedIn profile", href: "https://linkedin.com/in/cherifa-ben-ghorbel", external: true },
+];
 
 /* A single typed line that cycles through your focus areas. */
 function RoleTyper() {
@@ -49,10 +69,14 @@ function RoleTyper() {
   }, [text, deleting, index, reduce]);
 
   return (
-    <p className="h-6 font-mono text-sm sm:text-base text-[#B7AFC0]" aria-label={ROLES.join(", ")}>
-      <span className="text-[#A8203F]" aria-hidden>~$ </span>
-      <span aria-hidden>{text}</span>
-      <span aria-hidden className="ml-0.5 inline-block h-4 w-[2px] bg-[#FF4FA0] align-middle animate-pulse" />
+    <p className="h-6 font-mono text-sm sm:text-base text-[#B7AFC0]">
+      {/* screen readers get the full list once instead of every typed letter */}
+      <span className="sr-only">Focus areas: {ROLES.join(", ")}</span>
+      <span aria-hidden>
+        <span className="text-[#A8203F]">~$ </span>
+        {text}
+        <span className="ml-0.5 inline-block h-4 w-[2px] bg-[#FF4FA0] align-middle animate-pulse" />
+      </span>
     </p>
   );
 }
@@ -89,13 +113,6 @@ function Magnetic({ strength = 0.3, className = "", children, ...rest }) {
   );
 }
 
-const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0]";
-
-const socialClass =
-  "p-2.5 border rounded-full bg-black/60 border-[#7A1330]/40 text-[#C9C0D1] transition-colors " +
-  "hover:text-[#FF4FA0] hover:border-[#FF4FA0]/60 " + focusRing;
-
 export default function Hero() {
   /* Motion values (not state): the glow follows the cursor without re-rendering the hero or the 3D scene. */
   const mx = useMotionValue(50);
@@ -111,144 +128,141 @@ export default function Hero() {
   };
 
   return (
-    <section
-      id="home"
-      onPointerMove={onPointerMove}
-      className="relative flex items-center justify-center min-h-[100svh] overflow-hidden bg-[#0A0910]"
-    >
-      <Scene3D />
+    <MotionConfig reducedMotion="user">
+      {/* No solid background here: the site-wide Starfield shows through, so the hero does not need its own stars. */}
+      <section
+        id="home"
+        aria-label="Introduction"
+        onPointerMove={onPointerMove}
+        className="relative flex items-center justify-center min-h-[100svh] overflow-hidden"
+      >
+        <Scene3D />
 
-      {/* Cursor glow */}
-      <motion.div aria-hidden className="absolute inset-0 z-[5] pointer-events-none" style={{ background: glow }} />
+        {/* Cursor glow */}
+        <motion.div aria-hidden className="absolute inset-0 z-[5] pointer-events-none" style={{ background: glow }} />
 
-      {/* Legibility: darken the text side and the bottom edge, leave the scene visible on the avatar side */}
-      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#0A0910]/85 via-[#0A0910]/35 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 z-10 h-40 pointer-events-none bg-gradient-to-t from-[#0A0910] to-transparent" />
+        {/* Legibility: darken the text side and soften the bottom edge, leave the scene visible on the avatar side */}
+        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#0A0910]/80 via-[#0A0910]/30 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 z-10 h-32 pointer-events-none bg-gradient-to-t from-[#0A0910]/90 to-transparent" />
 
-      <div className="relative z-20 w-full pt-24 pb-20 section-container">
-        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-6">
-          {/* ---------- Left: text ---------- */}
-          <motion.div variants={column} initial="hidden" animate="show" className="text-center lg:text-left">
-            <motion.div
-              variants={item}
-              className="inline-flex items-center gap-2 px-3 py-1 mb-5 font-mono text-xs border rounded-full bg-black/60 border-[#7A1330]/50 text-[#C9C0D1]"
-            >
-              <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full opacity-60 bg-[#FF4FA0] animate-ping" />
-                <span className="relative inline-flex w-2 h-2 rounded-full bg-[#FF4FA0]" />
-              </span>
-              Open for internships
-            </motion.div>
-
-            <motion.h1
-              variants={item}
-              className="mb-4 text-3xl font-bold leading-[1.1] tracking-tight font-display sm:text-4xl md:text-5xl
-                         bg-gradient-to-r from-[#F4F1F6] via-[#F4F1F6] to-[#FF8FC0] bg-clip-text text-transparent"
-            >
-              Cherifa Ben Ghorbel
-            </motion.h1>
-
-            <motion.p
-              variants={item}
-              className="max-w-md mx-auto mb-4 text-base leading-relaxed sm:text-lg text-[#E4DEE8] lg:mx-0"
-            >
-              Software engineering student building full-stack apps and the cloud infrastructure that keeps them running.
-            </motion.p>
-
-            <motion.div variants={item} className="flex justify-center mb-6 lg:justify-start">
-              <RoleTyper />
-            </motion.div>
-
-            <motion.div
-              variants={item}
-              className="flex flex-wrap items-center justify-center mb-8 text-sm gap-x-5 gap-y-2 text-[13px] text-[#B7AFC0] lg:justify-start"
-            >
-              <span className="flex items-center gap-1.5">
-                <MapPin size={16} className="text-[#FF4FA0]/70" />
-                Hammam-Lif, Tunisia
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Laptop size={16} className="text-[#FF4FA0]/70" />
-                Remote or on-site
-              </span>
-            </motion.div>
-
-            <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-3 mb-7 lg:justify-start">
-              <Magnetic
-                href="#projects"
-                className={`relative px-6 py-3 text-sm font-semibold text-[#F4F1F6] rounded-full overflow-hidden group ${focusRing}`}
+        <div className="relative z-20 w-full pt-24 pb-24 section-container">
+          <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-6">
+            {/* ---------- Left: text ---------- */}
+            <motion.div variants={column} initial="hidden" animate="show" className="text-center lg:text-left">
+              <motion.div
+                variants={item}
+                className="inline-flex items-center gap-2 px-3 py-1 mb-5 font-mono text-xs border rounded-full bg-black/60 border-[#7A1330]/50 text-[#C9C0D1]"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-[#7A1330] to-[#A8203F]" />
-                <span className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-r from-[#FF4FA0] to-[#FF8FC0] group-hover:opacity-100" />
-                <span className="relative flex items-center gap-2">
-                  <Sparkles size={16} />
-                  View my projects
+                <span className="relative flex w-2 h-2">
+                  <span className="absolute inline-flex w-full h-full rounded-full opacity-60 bg-[#FF4FA0] animate-ping motion-reduce:hidden" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-[#FF4FA0]" />
                 </span>
-              </Magnetic>
+                Open for internships
+              </motion.div>
 
-              <Magnetic
-                href="#contact"
-                className={`px-6 py-3 text-sm font-semibold transition-colors border rounded-full border-[#A8203F] text-[#F0AFC6] hover:bg-[#7A1330]/30 hover:border-[#FF4FA0] ${focusRing}`}
+              <motion.h1
+                variants={item}
+                className="mb-4 text-4xl font-bold leading-[1.1] tracking-tight font-display sm:text-5xl md:text-6xl
+                           bg-gradient-to-r from-[#F4F1F6] via-[#F4F1F6] to-[#FF8FC0] bg-clip-text text-transparent"
               >
-                Contact me
-              </Magnetic>
+                Cherifa Ben Ghorbel
+              </motion.h1>
+
+              <motion.p
+                variants={item}
+                className="max-w-md mx-auto mb-4 text-base leading-relaxed sm:text-lg text-[#E4DEE8] lg:mx-0"
+              >
+                Software engineering student building full-stack apps and the cloud infrastructure that keeps them running.
+              </motion.p>
+
+              <motion.div variants={item} className="flex justify-center mb-6 lg:justify-start">
+                <RoleTyper />
+              </motion.div>
+
+              <motion.div
+                variants={item}
+                className="flex flex-wrap items-center justify-center mb-8 text-[13px] gap-x-5 gap-y-2 text-[#B7AFC0] lg:justify-start"
+              >
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={16} aria-hidden className="text-[#FF4FA0]/70" />
+                  Hammam-Lif, Tunisia
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Globe size={16} aria-hidden className="text-[#FF4FA0]/70" />
+                  Remote from anywhere, or on-site
+                </span>
+              </motion.div>
+
+              <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-3 mb-7 lg:justify-start">
+                <Magnetic
+                  href="#projects"
+                  className={`relative px-6 py-3 text-sm font-semibold text-[#F4F1F6] rounded-full overflow-hidden group ${focusRing}`}
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-[#7A1330] to-[#A8203F]" />
+                  <span className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-r from-[#FF4FA0] to-[#FF8FC0] group-hover:opacity-100" />
+                  <span className="relative flex items-center gap-2">
+                    <Sparkles size={16} aria-hidden />
+                    View my projects
+                  </span>
+                </Magnetic>
+
+                <Magnetic
+                  href="#contact"
+                  className={`px-6 py-3 text-sm font-semibold transition-colors border rounded-full border-[#A8203F] text-[#F0AFC6] hover:bg-[#7A1330]/30 hover:border-[#FF4FA0] ${focusRing}`}
+                >
+                  Contact me
+                </Magnetic>
+
+                {CV_URL && (
+                  <Magnetic
+                    href={CV_URL}
+                    download
+                    className={`inline-flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors rounded-full text-[#C9C0D1] hover:text-[#FF4FA0] ${focusRing}`}
+                  >
+                    <Download size={16} aria-hidden />
+                    Download CV
+                  </Magnetic>
+                )}
+              </motion.div>
+
+              <motion.div variants={item} className="flex items-center justify-center gap-4 lg:justify-start">
+                {SOCIALS.map(({ icon: Icon, label, href, external }) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className={socialClass}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Icon size={18} />
+                  </motion.a>
+                ))}
+              </motion.div>
             </motion.div>
 
-            <motion.div variants={item} className="flex items-center justify-center gap-4 lg:justify-start">
-              <motion.a
-                href="mailto:cherifabenghorbel@gmail.com"
-                aria-label="Send me an email"
-                className={socialClass}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Mail size={18} />
-              </motion.a>
-              <motion.a
-                href="https://github.com/cherifabenghorbel"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub profile"
-                className={socialClass}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Github size={18} />
-              </motion.a>
-              <motion.a
-                href="https://linkedin.com/in/cherifa-ben-ghorbel"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn profile"
-                className={socialClass}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Linkedin size={18} />
-              </motion.a>
-            </motion.div>
-          </motion.div>
-
-          {/* ---------- Right: avatar (the one memorable element) ---------- */}
-          <div className="flex justify-center lg:justify-end">
-            <Avatar />
+            {/* ---------- Right: avatar (the one memorable element) ---------- */}
+            <div className="flex justify-center lg:justify-end">
+              <Avatar />
+            </div>
           </div>
-        </div>
 
-        {/* Scroll cue */}
-        <motion.a
-          href="#about"
-          aria-label="Scroll to the About section"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="absolute transition-colors -translate-x-1/2 bottom-6 left-1/2 text-[#5C5364] hover:text-[#FF4FA0]"
-        >
-          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
-            <ArrowDown size={22} />
-          </motion.div>
-        </motion.a>
-      </div>
-    </section>
+          {/* Scroll cue */}
+          <motion.a
+            href="#about"
+            aria-label="Scroll to the About section"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            className={`absolute transition-colors -translate-x-1/2 bottom-6 left-1/2 text-[#5C5364] hover:text-[#FF4FA0] ${focusRing}`}
+          >
+            <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+              <ArrowDown size={22} />
+            </motion.div>
+          </motion.a>
+        </div>
+      </section>
+    </MotionConfig>
   );
 }

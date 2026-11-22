@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -7,7 +6,8 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import avatarVideo from "../assets/avatar-interaction.mp4";
+import { useEffect, useRef, useState } from "react";
+import avatarVideo from "/videos/avatar-interaction.mp4";
 
 /* ---- timeline of the video (seconds) ---- */
 const IDLE_END = 1.0; // 0 → IDLE_END = typing loop, after that = look up, wave, hand down

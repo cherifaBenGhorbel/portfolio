@@ -7,10 +7,10 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans antialiased bg-ink text-[#F4F1F6];
+    @apply font-sans antialiased bg-[#0A0910] text-[#F4F1F6];
   }
   ::selection {
-    @apply text-white bg-pink/30;
+    @apply text-white bg-[#FF4FA0]/30;
   }
 }
 
@@ -18,24 +18,35 @@
   .section-container {
     @apply max-w-6xl px-4 mx-auto sm:px-6 lg:px-8;
   }
-  .gradient-text {
-    @apply text-transparent bg-gradient-to-r from-bordeaux via-bordeaux-light to-pink bg-clip-text;
+
+  .section-title {
+    @apply text-3xl font-bold tracking-tight text-center font-display sm:text-4xl text-[#F4F1F6];
   }
-  .card-glass {
-    @apply border bg-black/40 backdrop-blur-xl border-bordeaux/30 rounded-2xl;
+
+  .card {
+    @apply border border-[#7A1330]/40 bg-[#110C13]/80 rounded-2xl;
   }
+
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
-           bg-bordeaux text-[#F4F1F6] transition-all duration-300
-           hover:bg-pink hover:shadow-[0_0_24px_-4px_rgba(255,79,160,0.55)];
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
+           bg-gradient-to-r from-[#7A1330] to-[#A8203F] text-[#F4F1F6]
+           transition-all duration-300
+           hover:brightness-125 hover:shadow-[0_0_24px_-4px_rgba(255,79,160,0.45)]
+           active:scale-[0.97]
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0];
   }
+
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
-           border border-bordeaux-light text-[#F0AFC6] transition-all duration-300
-           hover:border-pink hover:bg-bordeaux/30;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
+           border border-[#A8203F] text-[#F0AFC6]
+           transition-all duration-300
+           hover:border-[#FF4FA0] hover:bg-[#7A1330]/30
+           active:scale-[0.97]
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0];
   }
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
