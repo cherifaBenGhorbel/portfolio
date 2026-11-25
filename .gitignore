@@ -33,7 +33,12 @@ coverage/
 *.sln
 *.sw?
 
+# Full-resolution video masters (not deployed, not committed)
+.media-originals/
+
 # Temporary files
 .tmp/
 tmp/
 *.tmp
+# Screenshots pasted into chat, not part of the site
+/*.png

@@ -2,15 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- palette ---------- */
+/* Dark is the default; [data-theme="light"] swaps the same variables. */
+:root,
+[data-theme="dark"] {
+  --c-ink: 10 9 16;
+  --c-panel: 17 12 19;
+  --c-panel-2: 23 16 24;
+  --c-fg: 244 241 246;
+  --c-body: 228 222 232;
+  --c-muted: 183 175 192;
+  --c-muted-2: 201 192 209;
+  --c-faint: 148 140 156;
+  --c-faint-2: 92 83 100;
+  --c-shade: 10 9 16;
+  --c-tint: 30 21 31; /* inset surface: stat boxes, module cards, chips */
+  --c-ok: 110 231 183;
+  --c-danger: 252 165 165;
+  --c-onaccent: 244 241 246;
+  --c-wine: 122 19 48;
+  --c-wine-light: 168 32 63;
+  --c-wine-deep: 90 18 38;
+  --c-pink: 255 79 160;
+  --c-pink-soft: 255 143 192;
+  --c-pink-chip: 240 175 198;
+  --c-pink-deep: 224 82 127;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --c-ink: 250 242 245;
+  --c-panel: 255 255 255;
+  --c-panel-2: 253 247 249;
+  --c-fg: 28 18 25;
+  --c-body: 58 45 55;
+  --c-muted: 96 82 94;
+  --c-muted-2: 108 94 106;
+  --c-faint: 130 116 128;
+  --c-faint-2: 158 145 155;
+  --c-shade: 74 56 66;
+  --c-tint: 249 239 243; /* warm pink-grey instead of a muddy dark overlay */
+  --c-ok: 4 120 87;
+  --c-danger: 176 24 24;
+  --c-onaccent: 255 255 255;
+  --c-wine: 122 19 48;
+  --c-wine-light: 140 26 55;
+  --c-wine-deep: 205 165 179;
+  --c-pink: 205 41 115;
+  --c-pink-soft: 176 40 100;
+  --c-pink-chip: 150 30 82;
+  --c-pink-deep: 182 36 92;
+  color-scheme: light;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans antialiased bg-[#0A0910] text-[#F4F1F6];
+    @apply font-sans antialiased bg-ink text-fg;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  /* jumping from the fixed navbar used to hide the heading underneath it */
+  section[id] {
+    scroll-margin-top: 5.5rem;
   }
   ::selection {
-    @apply text-white bg-[#FF4FA0]/30;
+    @apply text-white bg-pink/30;
   }
 }
 
@@ -19,48 +77,127 @@
     @apply max-w-6xl px-4 mx-auto sm:px-6 lg:px-8;
   }
 
-  .section-title {
-    @apply text-3xl font-bold tracking-tight text-center font-display sm:text-4xl text-[#F4F1F6];
-  }
-
-  .card {
-    @apply border border-[#7A1330]/40 bg-[#110C13]/80 rounded-2xl;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
-           bg-gradient-to-r from-[#7A1330] to-[#A8203F] text-[#F4F1F6]
-           transition-all duration-300
-           hover:brightness-125 hover:shadow-[0_0_24px_-4px_rgba(255,79,160,0.45)]
-           active:scale-[0.97]
-           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0];
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-full
-           border border-[#A8203F] text-[#F0AFC6]
-           transition-all duration-300
-           hover:border-[#FF4FA0] hover:bg-[#7A1330]/30
-           active:scale-[0.97]
-           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0];
-  }
 }
 
-/* Scrollbar */
+/* ---------- scrollbar ---------- */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0910;
+  background: rgb(var(--c-ink));
 }
 ::-webkit-scrollbar-thumb {
-  background: #7A1330;
+  background: rgb(var(--c-wine));
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8203F;
+  background: rgb(var(--c-wine-light));
 }
 
 video {
   border-radius: 0.75rem;
+}
+
+/* ---------- printing the page as a CV ---------- */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  /* print on white paper, whatever theme is on screen */
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --c-ink: 255 255 255;
+    --c-panel: 255 255 255;
+    --c-panel-2: 255 255 255;
+    --c-fg: 28 18 25;
+    --c-body: 48 38 46;
+    --c-muted: 74 62 72;
+    --c-muted-2: 74 62 72;
+    --c-faint: 90 78 88;
+    --c-faint-2: 110 98 108;
+    --c-shade: 255 255 255;
+    --c-tint: 250 245 247;
+    --c-onaccent: 255 255 255;
+    --c-wine: 122 19 48;
+    --c-wine-light: 140 26 55;
+    --c-pink: 165 24 88;
+    --c-pink-soft: 165 24 88;
+    --c-pink-chip: 140 22 74;
+    --c-ok: 4 120 87;
+    --c-danger: 150 20 20;
+    color-scheme: light;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  body {
+    background: #fff !important;
+  }
+  /* a full-screen hero would eat the first page */
+  #home {
+    min-height: 0 !important;
+  }
+  .no-print,
+  .starfield {
+    display: none !important;
+  }
+  /* cards must not be split across pages */
+  section,
+  li,
+  article {
+    break-inside: avoid;
+  }
+  section {
+    padding: 0 0 10mm !important;
+  }
+  /* the effects are screen-only */
+  * {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+/* Light mode has no starfield, so the page gets its own atmosphere: three wide,
+   very soft washes of bordeaux and pink that keep white cards from floating on flat white. */
+[data-theme="light"] body {
+  background-image:
+    radial-gradient(60rem 42rem at 6% -8%, rgba(205, 41, 115, 0.11), transparent 62%),
+    radial-gradient(52rem 38rem at 102% 6%, rgba(122, 19, 48, 0.08), transparent 60%),
+    radial-gradient(48rem 34rem at 42% 108%, rgba(205, 41, 115, 0.09), transparent 62%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* The signature mark: a short bright dash travelling along the monitoring trace.
+   A dash of 16 with a long gap, offset so it enters from the left and exits right. */
+.trace-pulse {
+  stroke-dasharray: 16 240;
+  stroke-dashoffset: 256;
+  filter: drop-shadow(0 0 6px currentColor);
+  animation: trace-run 4.5s linear infinite;
+}
+
+@keyframes trace-run {
+  from {
+    stroke-dashoffset: 256;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trace-pulse {
+    animation: none;
+    stroke-dasharray: none;
+    opacity: 0.55;
+  }
+}
+
+/* light theme: softer shadows, so white cards read as paper instead of soot */
+[data-theme="light"] .shadow-\[0_8px_40px_rgba\(0\,0\,0\,0\.45\)\] {
+  box-shadow: 0 8px 30px rgba(122, 19, 48, 0.12);
 }

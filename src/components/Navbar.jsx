@@ -9,26 +9,26 @@ import {
   useSpring,
 } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import LangSwitch from "./LangSwitch";
+import { ease, focusRing } from "../lib/motion";
+import { useI18n } from "../i18n";
 
 /* ---------- content ---------- */
 const links = [
-  { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#education", label: "Education" },
-  { href: "#contact", label: "Contact" },
+  { href: "#about", label: { en: "About", fr: "À propos" } },
+  { href: "#experience", label: { en: "Experience", fr: "Expérience" } },
+  { href: "#projects", label: { en: "Projects", fr: "Projets" } },
+  { href: "#education", label: { en: "Education", fr: "Formation" } },
+  { href: "#contact", label: { en: "Contact", fr: "Contact" } },
 ];
 const SECTION_IDS = ["home", ...links.map((l) => l.href.slice(1))];
 
 // true (desktop only): scrolling down slides the bar away and a small pill appears on the left.
-// Scrolling back up brings the full bar back. Set to false to keep the bar always in place.
-const DOCK_ON_SCROLL = true;
+// Scrolling back up brings the full bar back. A recruiter who scrolls down loses the section links,
+// so the bar now stays in place the whole way down the page.
+const DOCK_ON_SCROLL = false;
 
-const ease = [0.22, 1, 0.36, 1];
 const spring = { type: "spring", stiffness: 200, damping: 30 };
-
-const focusRing =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4FA0]";
 
 /* ---------- helpers ---------- */
 function useIsDesktop() {
@@ -61,13 +61,13 @@ function useActiveSection(ids) {
 }
 
 const CtaClass =
-  `inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#7A1330] to-[#A8203F] px-5 py-2 text-sm font-semibold text-[#F4F1F6] ` +
+  `inline-flex items-center justify-center rounded-full bg-gradient-to-r from-wine to-wine-light px-5 py-2 text-sm font-semibold text-onaccent ` +
   `transition-[filter,transform] hover:brightness-125 active:scale-95 ${focusRing}`;
 
 const Logo = ({ short = false }) => (
-  <a href="#home" className={`rounded-full text-xl font-bold tracking-tight font-display ${focusRing}`}>
-    <span className="text-[#FF4FA0]">C.</span>
-    {!short && <span className="text-[#F4F1F6]">Ben Ghorbel</span>}
+  <a href="#home" className={`shrink-0 whitespace-nowrap rounded-full text-xl font-bold tracking-tight font-display ${focusRing}`}>
+    <span className="text-pink">C.</span>
+    {!short && <span className="text-fg">Ben Ghorbel</span>}
   </a>
 );
 
@@ -91,6 +91,7 @@ function ToggleIcon({ open }) {
 /* desktop links: a pill slides to the hovered link, a dot marks the current section */
 function NavItems({ active }) {
   const [hovered, setHovered] = useState(null);
+  const { pick } = useI18n();
   return (
     <ul onMouseLeave={() => setHovered(null)} className="items-center hidden gap-1 lg:flex">
       {links.map((l) => {
@@ -104,24 +105,24 @@ function NavItems({ active }) {
               onFocus={() => setHovered(id)}
               onBlur={() => setHovered(null)}
               aria-current={isActive ? "location" : undefined}
-              className={`relative block rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
-                isActive ? "text-[#F4F1F6]" : "text-[#B7AFC0] hover:text-[#F4F1F6]"
+              className={`relative block whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                isActive ? "text-fg" : "text-muted hover:text-fg"
               } ${focusRing}`}
             >
               {hovered === id && (
                 <motion.span
                   layoutId="nav-hover"
                   aria-hidden
-                  className="absolute inset-0 rounded-full bg-[#7A1330]/35"
+                  className="absolute inset-0 rounded-full bg-wine/35"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
-              <span className="relative">{l.label}</span>
+              <span className="relative">{pick(l.label)}</span>
               {isActive && (
                 <motion.span
                   layoutId="nav-active"
                   aria-hidden
-                  className="absolute left-1/2 -bottom-0.5 h-1 w-1 -translate-x-1/2 rounded-full bg-[#FF4FA0] shadow-[0_0_8px_#FF4FA0]"
+                  className="absolute left-1/2 -bottom-0.5 h-1 w-1 -translate-x-1/2 rounded-full bg-pink shadow-[0_0_8px_#FF4FA0]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
@@ -135,6 +136,7 @@ function NavItems({ active }) {
 
 export default function Navbar() {
   const reduce = useReducedMotion();
+  const { t, pick } = useI18n();
   const isDesktop = useIsDesktop();
   const [scrolled, setScrolled] = useState(false);
   const [docked, setDocked] = useState(false);
@@ -176,7 +178,7 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease }}
-        className="fixed inset-x-0 top-0 z-50 px-3 pointer-events-none sm:px-4"
+        className="fixed inset-x-0 top-0 z-50 px-3 pointer-events-none no-print sm:px-4"
       >
         {/* dim the page behind the open menu; tapping it closes the menu */}
         <AnimatePresence>
@@ -189,7 +191,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
-              className={`fixed inset-0 -z-10 bg-black/50 pointer-events-auto backdrop-blur-[2px] ${
+              className={`fixed inset-0 -z-10 bg-shade/50 pointer-events-auto backdrop-blur-[2px] ${
                 menuVisibleOnDesktop ? "" : "lg:hidden"
               }`}
             />
@@ -198,11 +200,13 @@ export default function Navbar() {
 
         {/* the full bar: full width at the top, a floating pill when scrolled, slides away when docked */}
         <motion.nav
+          initial={{ maxWidth: 4000 }}
           aria-label="Main"
           aria-hidden={dockedNow || undefined}
           {...(dockedNow ? { inert: "" } : {})}
           animate={{
-            maxWidth: scrolled ? 880 : 1152,
+            // 4000 is the "no cap" value: maxWidth cannot animate from none
+            maxWidth: scrolled ? 1024 : 4000,
             y: dockedNow ? -110 : scrolled ? 12 : 0,
             opacity: dockedNow ? 0 : 1,
           }}
@@ -212,35 +216,38 @@ export default function Navbar() {
                         dockedNow ? "pointer-events-none" : "pointer-events-auto"
                       } ${
                         solid
-                          ? "border-[#7A1330]/50 bg-[#0A0910]/75 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.45)]"
+                          ? "border-wine/50 bg-ink/75 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.45)]"
                           : "border-transparent bg-transparent"
                       }`}
         >
           <Logo />
           <NavItems active={active} />
 
-          <div className="items-center hidden lg:flex">
-            <a href="#contact" className={CtaClass}>
-              Contact me
-            </a>
+          {/* one utility cluster: language switch always visible, CTA on desktop, burger below it */}
+          <div className="flex items-center gap-2">
+            <LangSwitch />
+            <div className="hidden lg:block">
+                                <a href="#contact" className={`${CtaClass} whitespace-nowrap`}>
+                {t("Contact me", "Me contacter")}
+              </a>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              aria-label={t(open ? "Close menu" : "Open menu", open ? "Fermer le menu" : "Ouvrir le menu")}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              className={`rounded-full p-2 text-muted-2 transition-colors hover:text-pink lg:hidden ${focusRing}`}
+            >
+              <ToggleIcon open={open} />
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            className={`rounded-full p-2 text-[#C9C0D1] transition-colors hover:text-[#FF4FA0] lg:hidden ${focusRing}`}
-          >
-            <ToggleIcon open={open} />
-          </button>
 
           {/* reading progress: a thin line along the bottom edge of the pill */}
           <motion.span
             aria-hidden
             style={{ scaleX: bar }}
-            className={`pointer-events-none absolute inset-x-6 -bottom-px h-[2px] origin-left rounded-full bg-gradient-to-r from-[#FF4FA0] to-[#FF8FC0]
+            className={`pointer-events-none absolute inset-x-6 -bottom-px h-[2px] origin-left rounded-full bg-gradient-to-r from-pink to-pink-soft
                         transition-opacity duration-300 ${scrolled ? "opacity-100" : "opacity-0"}`}
           />
         </motion.nav>
@@ -254,7 +261,7 @@ export default function Navbar() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -100, opacity: 0 }}
               transition={spring}
-              className="pointer-events-auto absolute left-4 top-3 flex h-12 items-center gap-1 rounded-full border border-[#7A1330]/50 bg-[#0A0910]/75 pl-4 pr-1.5 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.45)]"
+              className="pointer-events-auto absolute left-4 top-3 flex h-12 items-center gap-1 rounded-full border border-wine/50 bg-ink/75 pl-4 pr-1.5 backdrop-blur-xl shadow-[0_8px_40px_rgba(0,0,0,0.45)]"
             >
               <Logo short />
               <button
@@ -263,14 +270,14 @@ export default function Navbar() {
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
                 aria-controls="mobile-menu"
-                className={`rounded-full p-2 text-[#C9C0D1] transition-colors hover:text-[#FF4FA0] ${focusRing}`}
+                className={`rounded-full p-2 text-muted-2 transition-colors hover:text-pink ${focusRing}`}
               >
                 <ToggleIcon open={open} />
               </button>
               <motion.span
                 aria-hidden
                 style={{ scaleX: bar }}
-                className="pointer-events-none absolute inset-x-5 -bottom-px h-[2px] origin-left rounded-full bg-gradient-to-r from-[#FF4FA0] to-[#FF8FC0]"
+                className="pointer-events-none absolute inset-x-5 -bottom-px h-[2px] origin-left rounded-full bg-gradient-to-r from-pink to-pink-soft"
               />
             </motion.div>
           )}
@@ -286,7 +293,7 @@ export default function Navbar() {
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.25, ease }}
               style={{ transformOrigin: menuVisibleOnDesktop ? "top left" : "top center" }}
-              className={`pointer-events-auto overflow-hidden rounded-3xl border border-[#7A1330]/50 bg-[#0A0910]/95 backdrop-blur-xl
+              className={`pointer-events-auto overflow-hidden rounded-3xl border border-wine/50 bg-ink/95 backdrop-blur-xl
                           shadow-[0_16px_60px_rgba(0,0,0,0.5)] ${
                             menuVisibleOnDesktop
                               ? "ml-1 mt-2 w-72"
@@ -307,12 +314,12 @@ export default function Navbar() {
                         href={l.href}
                         onClick={() => setOpen(false)}
                         aria-current={isActive ? "location" : undefined}
-                        className={`flex items-center justify-between rounded-2xl px-4 py-3 text-[15px] font-medium transition-colors hover:bg-[#7A1330]/25 ${
-                          isActive ? "text-[#F4F1F6]" : "text-[#C9C0D1]"
+                        className={`flex items-center justify-between rounded-2xl px-4 py-3 text-[15px] font-medium transition-colors hover:bg-wine/25 ${
+                          isActive ? "text-fg" : "text-muted-2"
                         } ${focusRing}`}
                       >
-                        {l.label}
-                        {isActive && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[#FF4FA0] shadow-[0_0_8px_#FF4FA0]" />}
+                        {pick(l.label)}
+                        {isActive && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-pink shadow-[0_0_8px_#FF4FA0]" />}
                       </a>
                     </motion.li>
                   );
@@ -320,7 +327,7 @@ export default function Navbar() {
               </ul>
               <div className="p-3 pt-0">
                 <a href="#contact" onClick={() => setOpen(false)} className={`${CtaClass} w-full py-3`}>
-                  Contact me
+                  {t("Contact me", "Me contacter")}
                 </a>
               </div>
             </motion.div>

@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "../i18n";
 
 
 /* ---- timeline of the video (seconds) ---- */
@@ -17,10 +18,12 @@ const BUBBLE_AT = IDLE_END + 0.6; // when the "Hello" bubble pops in (tune to wh
 const TRIGGER_MARGIN = 180; // px around the avatar where the cursor counts as "close"
 const LEAVE_DELAY = 600; // ms the cursor must stay away before she goes back to work
 const TAP_HOLD = 4000; // ms the greeting lasts after a tap (touch devices)
-const avatarVideo = "https://res.cloudinary.com/lcmrgcef/video/upload/v1795376165/avatar-interaction.mp4"
+// Served from this site (public/videos) so the hero never depends on a third party.
+const avatarVideo = "/videos/avatar-interaction.mp4"
 
 export default function Avatar() {
   const reduce = useReducedMotion();
+  const { t } = useI18n();
 
   const wrapRef = useRef(null);
   const videoRef = useRef(null);
@@ -170,7 +173,10 @@ export default function Avatar() {
       ref={wrapRef}
       role="button"
       tabIndex={0}
-      aria-label="Cherifa at her desk. Move closer, tap or press Enter to say hello."
+      aria-label={t(
+        "Cherifa at her desk. Move closer, tap or press Enter to say hello.",
+        "Cherifa à son bureau. Approchez, touchez ou appuyez sur Entrée pour dire bonjour."
+      )}
       onClick={greetNow}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && greetNow()}
       initial={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -181,7 +187,7 @@ export default function Avatar() {
       {/* ambient glow: breathes slowly, brightens when she notices you */}
       <motion.div
         aria-hidden
-        className="absolute -inset-6 rounded-[3rem] bg-[#FF4FA0] blur-3xl"
+        className="absolute -inset-6 rounded-[3rem] bg-pink blur-3xl"
         animate={{ opacity: greeting ? 0.32 : 0.16, scale: greeting ? 1.04 : 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
@@ -204,10 +210,10 @@ export default function Avatar() {
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
               style={{ originX: 0, originY: 1 }}
               className="absolute z-20 -top-5 -left-2 sm:-left-6 px-4 py-2 rounded-2xl rounded-bl-sm
-                         border border-[#FF4FA0]/50 bg-[#0A0910]/90 backdrop-blur
-                         text-sm font-medium text-[#F4F1F6] shadow-[0_0_28px_rgba(255,79,160,0.35)]"
+                         border border-pink/50 bg-ink/90 backdrop-blur
+                         text-sm font-medium text-fg shadow-[0_0_28px_rgba(255,79,160,0.35)]"
             >
-              Hi, I’m Cherifa!{" "}
+              {t("Hi, I’m Cherifa!", "Salut, je suis Cherifa !")}{" "}
               <motion.span
                 className="inline-block origin-[70%_80%]"
                 animate={{ rotate: [0, 22, -10, 22, 0] }}
@@ -226,10 +232,10 @@ export default function Avatar() {
             rotateY: reduce ? 0 : rotateY,
             transformPerspective: 1000,
           }}
-          className="relative overflow-hidden rounded-[2rem] bg-[#171018]
-                     border border-[#7A1330]/60 shadow-[0_0_50px_rgba(255,79,160,0.18)]
+          className="relative overflow-hidden rounded-[2rem] bg-panel-2
+                     border border-wine/60 shadow-[0_0_50px_rgba(255,79,160,0.18)]
                      transition-[border-color,box-shadow] duration-500
-                     group-focus-visible:border-[#FF4FA0] data-[greeting=true]:border-[#FF4FA0]/70"
+                     group-focus-visible:border-pink data-[greeting=true]:border-pink/70"
           data-greeting={greeting}
         >
           <video
@@ -244,20 +250,23 @@ export default function Avatar() {
               ready ? "opacity-100" : "opacity-0"
             }`}
           />
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0A0910]/55 via-transparent to-transparent" />
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
         </motion.div>
 
         {/* status chip */}
         <div
           className="absolute z-20 flex items-center gap-2 px-3 py-1 font-mono text-[11px] -translate-x-1/2 border rounded-full -bottom-3 left-1/2
-                     bg-black/70 border-[#7A1330]/50 text-[#C9C0D1] backdrop-blur whitespace-nowrap"
-        >
+                                          bg-ink/85 border-wine/40 text-muted-2 backdrop-blur whitespace-nowrap">
           <span
             className={`w-1.5 h-1.5 rounded-full transition-colors ${
-              greeting ? "bg-emerald-400" : "bg-[#FF4FA0] animate-pulse"
+              greeting ? "bg-ok" : "bg-pink animate-pulse"
             }`}
           />
-          {greeting ? "oh, hi there!" : touch ? "coding… tap to say hi ☕" : "coding… come say hi ☕"}
+          {greeting
+            ? t("oh, hi there!", "oh, bonjour !")
+            : touch
+            ? t("coding… tap to say hi ☕", "je code… touchez pour dire bonjour ☕")
+            : t("coding… come say hi ☕", "je code… venez dire bonjour ☕")}
         </div>
       </motion.div>
     </motion.div>
