@@ -1130,8 +1130,8 @@ const STEPS = [
     kicker: { en: "Step 01", fr: "Étape 01" },
     title: { en: "Web development", fr: "Développement web" },
     text: {
-      en: "React, Node.js and Express on the screen side, MongoDB and MySQL behind. PawFriend, my final-year project, was the biggest one: five user roles and more than sixty user stories.",
-      fr: "React, Node.js et Express côté écran, MongoDB et MySQL derrière. PawFriend, mon projet de fin d’études, a été le plus gros : cinq rôles et plus de soixante user stories.",
+      en: "React, Node.js and Express on the screen side, MongoDB and MySQL behind. PawFrindu, my final-year project, was the biggest one: five user roles and more than sixty user stories.",
+      fr: "React, Node.js et Express côté écran, MongoDB et MySQL derrière. PawFrindu, mon projet de fin d’études, a été le plus gros : cinq rôles et plus de soixante user stories.",
     },
     tags: ["React", "Node.js", "Express", "MongoDB"],
   },

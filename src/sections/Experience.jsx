@@ -11,11 +11,11 @@ const experiences = [
   {
     featured: true,
     type: { en: "Final-year internship (PFE)", fr: "Stage de fin d’études (PFE)" },
-    period: { en: "1 February – 30 May 2025", fr: "1er février – 30 mai 2025" },
+    period: { en: "January – June 2025", fr: "janvier – juin 2025" },
     role: { en: "Full-Stack Developer", fr: "Développeuse full-stack" },
     company: "Evast’In",
-    location: { en: "Tunis, Tunisia", fr: "Tunis, Tunisie" },
-    project: "PawFriend",
+    location: { en: "Ennasr 2, Tunis", fr: "Ennasr 2, Tunis" },
+    project: "PawFrindu",
     summary: {
       en: "A full web platform where pet owners adopt animals, book veterinarians and trainers, and find lost pets.",
       fr: "Une plateforme web complète où les propriétaires adoptent des animaux, prennent rendez-vous chez les vétérinaires et les éducateurs, et retrouvent les animaux perdus.",

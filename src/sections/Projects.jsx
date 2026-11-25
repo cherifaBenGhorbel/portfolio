@@ -11,7 +11,7 @@ import { ease, focusRing } from "../lib/motion";
 const projects = [
   {
     id: "pawfrindu",
-    title: "PawFriend",
+    title: "PawFrindu",
     subtitle: {
       en: "Final-year project (PFE) — pet adoption & care platform",
       fr: "Projet de fin d’études (PFE) — plateforme d’adoption",
